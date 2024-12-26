@@ -2,13 +2,14 @@
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract OmikujiNFT is ERC721, ReentrancyGuard {
-    using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
+    // using Counters for Counters.Counter;
+    // Counters.Counter private _tokenIds;
+
+    uint256 private _nextTokenId;
 
     IERC20 public jpycToken;
     uint256 public constant PRICE = 100 * 10 ** 18; // 100 JPYC (considering 18 decimals)
@@ -45,8 +46,9 @@ contract OmikujiNFT is ERC721, ReentrancyGuard {
             "JPYC transfer failed"
         );
 
-        _tokenIds.increment();
-        uint256 newTokenId = _tokenIds.current();
+        // _tokenIds.increment();
+        // uint256 newTokenId = _tokenIds.current();
+        uint256 newTokenId = _nextTokenId++;
 
         // ランダムな運勢を決定
         string memory fortune = _getRandomFortune();
