@@ -23,7 +23,13 @@ contract OmikujiNFT is ERC721, ReentrancyGuard {
     mapping(uint256 => OmikujiResult) public omikujiResults;
 
     // 運勢の種類と確率の設定
-    string[] private fortunes = ["大吉", "中吉", "小吉", "吉", "末吉"];
+    string[] private fortunes = [
+        unicode"大吉",
+        unicode"中吉",
+        unicode"小吉",
+        unicode"吉",
+        unicode"末吉"
+    ];
     uint256[] private probabilities = [10, 20, 30, 25, 15]; // 確率（%）
 
     event OmikujiDrawn(address indexed player, uint256 tokenId, string fortune);
