@@ -28,6 +28,37 @@ export const ConnectButton = () => {
     }
   }
 
+  const handleSwitchChain = async () => {
+    try {
+      console.log('Switching to chain:', env.chain.id)
+      await switchChain({ 
+        chainId: env.chain.id,
+      })
+    } catch (error: unknown | { code: number }) {
+      if (error instanceof Error) {
+        console.error('Failed to switch chain:', error.message)
+      } else if (typeof error === 'object' && error && 'code' in error) {
+      if (error.code === 4902) {
+        // ネットワークの追加を試みる
+        try {
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [{
+              chainId: `0x${env.chain.id.toString(16)}`,
+              chainName: env.chain.name,
+              nativeCurrency: env.chain.nativeCurrency,
+              rpcUrls: [env.chain.rpcUrls.default.http[0]],
+              blockExplorerUrls: [env.chain.blockExplorers.default.url],
+            }],
+          })
+        } catch (addError) {
+          console.error('Failed to add network:', addError)
+        }
+      }
+    }
+  }
+}
+
   // 必要なネットワーク名
   const targetNetwork = isDevelopment() ? 'Amoy Testnet' : 'Polygon Mainnet'
 
@@ -41,7 +72,7 @@ export const ConnectButton = () => {
         <Button
           variant="destructive"
           className="w-full"
-          onClick={() => switchChain({ chainId: env.chain.id })}
+          onClick={handleSwitchChain}
         >
           {targetNetwork}に切り替える
         </Button>
